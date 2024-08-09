@@ -1,0 +1,6 @@
+@AWS.SNS_HostAddress = http://localhost:5182
+
+GET {{AWS.SNS_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
