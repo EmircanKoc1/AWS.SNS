@@ -1,4 +1,6 @@
 using Amazon.SimpleNotificationService;
+using Amazon.SimpleNotificationService.Model;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,25 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapPost("create-topic", async (
+    [FromServices] IAmazonSimpleNotificationService _simpleNotificationService,
+    [FromQuery] string topicName) =>
+{
+
+    var createTopicRequest = new CreateTopicRequest()
+    {
+        Name = topicName
+    };
+
+    var createTopicResponse = await _simpleNotificationService.CreateTopicAsync(createTopicRequest);
+
+
+    return Results.Ok(createTopicResponse);
+
+});
+
+
 
 
 
