@@ -95,5 +95,29 @@ static async Task<Topic?> GetTopic(IAmazonSimpleNotificationService snsService, 
     => await snsService.FindTopicAsync(topicName);
 
 
+static IEnumerable<string> GetAWSProtocols()
+{
+    // aws protocols  : aws, lambda ,http , https , email , email.json , sms , application , iot 
+
+    yield return "sqs";
+    yield return "lambda";
+    yield return "http";
+    yield return "https";
+    yield return "email";
+    yield return "email.json";
+    yield return "application";
+    yield return "iot";
+}
+
+static bool ProtocolIsValid(string protocol)
+{
+
+    foreach (var protocolItem in GetAWSProtocols())
+        if (protocolItem.Equals(protocol))
+            return true;
+
+
+    return false;
+}
 
 
