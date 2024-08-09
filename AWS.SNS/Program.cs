@@ -57,3 +57,10 @@ app.MapGet("list-topics", async (
 app.Run();
 
 
+static async Task<Topic?> GetTopic(IAmazonSimpleNotificationService snsService, string topicName)
+    => await snsService.FindTopicAsync(topicName);
+
+
+
+
+
