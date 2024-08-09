@@ -39,8 +39,21 @@ app.MapPost("create-topic", async (
 
 });
 
+app.MapGet("list-topics", async (
+    [FromServices] IAmazonSimpleNotificationService _simpleNotificationService) =>
+{
+    var listTopicsRequest = new ListTopicsRequest();
+    
+
+    var listTopicResponse = await _simpleNotificationService.ListTopicsAsync(listTopicsRequest);
+
+    return Results.Ok(listTopicResponse.Topics);
+
+});
 
 
 
 
 app.Run();
+
+
