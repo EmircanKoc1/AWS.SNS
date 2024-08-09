@@ -87,6 +87,41 @@ app.MapGet("list-topic-subscriptions", async (
 
 });
 
+app.MapPost("subscribe-protocol-to-topics/{topicName}/{protocol}", async (
+      [FromServices] IAmazonSimpleNotificationService _simpleNotificationService,
+      [FromRoute] string topicName,
+      [FromRoute] string protocol,
+      [FromQuery] string arn) =>
+{
+    if (!ProtocolIsValid(protocol))
+        return Results.BadRequest("protocol not valid");
+
+    if ((await GetTopic(_simpleNotificationService, topicName)) is Topic topic)
+    {
+        var subscribeRequest = new SubscribeRequest
+        {
+            TopicArn = topic.TopicArn,
+            Protocol = protocol,
+            Endpoint = arn
+        };
+
+        var subscribeResponse = await _simpleNotificationService.SubscribeAsync(subscribeRequest);
+
+        return subscribeResponse.HttpStatusCode is System.Net.HttpStatusCode.OK ?
+        Results.Ok(subscribeRequest) :
+        Results.BadRequest($"{protocol} not subscribed topic");
+
+    }
+
+    return Results.BadRequest("topic not found ");
+
+
+
+});
+
+
+
+
 
 app.Run();
 
