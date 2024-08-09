@@ -54,8 +54,8 @@ app.MapGet("list-topics", async (
 
 
 app.MapDelete("delete-topic-by-name", async (
-   [FromServices] IAmazonSimpleNotificationService _simpleNotificationService,
-   [FromQuery] string topicName) =>
+    [FromServices] IAmazonSimpleNotificationService _simpleNotificationService,
+    [FromQuery] string topicName) =>
 {
     DeleteTopicResponse? deleteTopicResponse = default;
 
@@ -71,6 +71,21 @@ app.MapDelete("delete-topic-by-name", async (
 });
 
 
+app.MapGet("list-topic-subscriptions", async (
+    [FromServices] IAmazonSimpleNotificationService _simpleNotificationService,
+    [FromQuery] string topicName) =>
+{
+    ListSubscriptionsByTopicResponse listSubscriptionsByTopicResponse = default;
+
+    if ((await GetTopic(_simpleNotificationService, topicName)) is Topic topic)
+    {
+        listSubscriptionsByTopicResponse = await _simpleNotificationService.ListSubscriptionsByTopicAsync(topic.TopicArn);
+        return Results.Ok(listSubscriptionsByTopicResponse.Subscriptions);
+    }
+    
+    return Results.BadRequest("topic not found");
+
+});
 
 
 app.Run();
@@ -78,7 +93,6 @@ app.Run();
 
 static async Task<Topic?> GetTopic(IAmazonSimpleNotificationService snsService, string topicName)
     => await snsService.FindTopicAsync(topicName);
-
 
 
 
