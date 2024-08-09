@@ -43,11 +43,14 @@ app.MapGet("list-topics", async (
     [FromServices] IAmazonSimpleNotificationService _simpleNotificationService) =>
 {
     var listTopicsRequest = new ListTopicsRequest();
-    
+
 
     var listTopicResponse = await _simpleNotificationService.ListTopicsAsync(listTopicsRequest);
 
     return Results.Ok(listTopicResponse.Topics);
+
+
+});
 
 
 app.MapDelete("delete-topic-by-name", async (
