@@ -49,6 +49,22 @@ app.MapGet("list-topics", async (
 
     return Results.Ok(listTopicResponse.Topics);
 
+
+app.MapDelete("delete-topic-by-name", async (
+   [FromServices] IAmazonSimpleNotificationService _simpleNotificationService,
+   [FromQuery] string topicName) =>
+{
+    DeleteTopicResponse? deleteTopicResponse = default;
+
+    if ((await GetTopic(_simpleNotificationService, topicName)) is Topic topic)
+        deleteTopicResponse = await _simpleNotificationService.DeleteTopicAsync(topic.TopicArn);
+
+
+    if (deleteTopicResponse is null)
+        return Results.BadRequest("topic not found");
+
+    return Results.Ok("topic deleted");
+
 });
 
 
