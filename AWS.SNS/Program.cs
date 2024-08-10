@@ -120,6 +120,27 @@ app.MapPost("subscribe-protocol-to-topic/{topicName}/{protocol}", async (
 });
 
 
+app.MapDelete("unsubscribe-protocol-to-topic", async (
+    [FromServices] IAmazonSimpleNotificationService _simpleNotificationService,
+    [FromQuery] string unsubscriptionArn) =>
+{
+
+    var unsubscribeResponse = await _simpleNotificationService.UnsubscribeAsync(unsubscriptionArn);
+
+    return new
+    {
+        HttpStatuscode = unsubscribeResponse.HttpStatusCode,
+        MetaData = unsubscribeResponse.ResponseMetadata
+    };
+
+});
+
+app.MapPost("publish-message-to-topic/{topicName}", async (
+    [FromServices] IAmazonSimpleNotificationService _simpleNotificationService,
+    [FromRoute] string topicName,
+    [FromQuery] string message) =>
+{
+    PublishResponse publishResponse = default;
 
 
 
