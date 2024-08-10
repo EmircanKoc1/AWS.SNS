@@ -87,7 +87,7 @@ app.MapGet("list-topic-subscriptions", async (
 
 });
 
-app.MapPost("subscribe-protocol-to-topics/{topicName}/{protocol}", async (
+app.MapPost("subscribe-protocol-to-topic/{topicName}/{protocol}", async (
       [FromServices] IAmazonSimpleNotificationService _simpleNotificationService,
       [FromRoute] string topicName,
       [FromRoute] string protocol,
