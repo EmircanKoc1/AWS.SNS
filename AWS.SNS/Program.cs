@@ -142,6 +142,15 @@ app.MapPost("publish-message-to-topic/{topicName}", async (
 {
     PublishResponse publishResponse = default;
 
+    if ((await GetTopic(_simpleNotificationService, topicName)) is Topic topic)
+        publishResponse = await _simpleNotificationService.PublishAsync(topic.TopicArn, message);
+
+    if (publishResponse is null)
+        return Results.BadRequest("topic not found");
+
+    return Results.Ok(publishResponse);
+});
+
 
 
 app.Run();
